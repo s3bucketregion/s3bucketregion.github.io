@@ -4,7 +4,7 @@ A simple web tool that generates a bash command to check the AWS region of S3 bu
 
 ## Usage
 
-1. Enter AWS S3 bucket names (one per line).
+1. Enter AWS S3 bucket names (one per line, max 50).
 2. Click “Generate Command”.
 3. Click “Copy” to copy the command.
 4. Paste and run it in your terminal.
@@ -15,3 +15,7 @@ A simple web tool that generates a bash command to check the AWS region of S3 bu
 - No AWS credentials required.
 - One-click copy feature for quick execution.
 - Clears terminal output before running the command.
+
+## Disclaimer
+
+This tool is intended for use on AWS S3 buckets that **you own or have explicit permission to query**. Unauthorized use of this tool may violate AWS policies.
