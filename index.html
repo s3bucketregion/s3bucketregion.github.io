@@ -3,24 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bucket Region Checker</title>
+    <title>AWS S3 Bucket Region Checker</title>
+
+    <!-- Meta information -->
+    <meta name="description" content="AWS S3 Bucket Region Checker – A simple tool to quickly determine the AWS region of an S3 bucket using a generated curl command. Fast, easy, and designed for AWS users." />
+    <meta name="author" content="Reese Gerjekian" />
+    <meta name="keywords" content="AWS S3, Amazon Web Services, AWS, S3 Bucket, Bucket Region Checker, AWS Region Finder, AWS CLI, Cloud Storage, AWS Tools, AWS Bucket Lookup, Amazon S3 Region, AWS Development, Cloud Infrastructure, DevOps, AWS Automation, Reese Gerjekian" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph Metadata (for social sharing) -->
+    <meta property="og:title" content="AWS S3 Bucket Region Checker" />
+    <meta property="og:description" content="Quickly determine the AWS region S3 buckets using a generated curl command. Fast and easy for AWS users." />
+    <meta property="og:image" content="image.png" />
+    <meta property="og:url" content="https://s3bucketregion.github.io/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AWS S3 Bucket Region Checker" />
+    <meta name="twitter:description" content="Quickly determine the AWS region S3 buckets using a generated curl command. Fast and easy for AWS users." />
+    <meta name="twitter:image" content="image.png" />
+
+    <!-- Favicon and icons -->
+    <link rel="icon" type="image/png" href="image.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="image.png" />
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
+        }
+
+        html, body {
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+            width: 100%; /* Ensures no extra width */
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 1rem;
             text-align: center;
-            padding: 20px;
         }
 
-        .container {
-            background: white;
+        /* Flexbox container for layout */
+        .layout-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            width: 90%;
+            margin: 20px auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .highlight {
+            font-weight: bold;
+            color: #0073e6;
+        }
+
+        /* Main content section */
+        .content-section {
+            flex: 1 1 60%;
+            min-width: 300px;
+        }
+
+        /* Limitations section */
+        .limitations-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* Title styles */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Textarea */
         textarea {
             width: 100%;
             max-width: 100%;
@@ -33,23 +113,24 @@
             box-sizing: border-box;
         }
 
+        /* Buttons */
         button {
-            background-color: #007bff;
+            padding: 10px 20px;
+            background-color: #0073e6;
             color: white;
             border: none;
-            padding: 10px 15px;
-            margin: 10px;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            margin-right: 10px;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #005bb5;
         }
 
+        /* Command Output Box */
         .command-container {
-            position: relative;
             background: #222;
             color: #00ff00;
             padding: 15px;
@@ -89,43 +170,90 @@
             max-width: 100%;
         }
 
-        .disclaimer {
-            font-size: 12px;
-            color: #777;
-            margin-top: 20px;
+        .footer {
+            background-color: #0073e6;
+            color: white;
             text-align: center;
-            max-width: 600px;
-            margin: auto;
+            padding: 1rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: auto;
         }
 
-        .disclaimer-block {
-            background-color: rgb(255, 230, 0);
+        .footer a {
+            color: #ffeeba;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ffdd57;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .layout-container {
+                flex-direction: column;
+            }
+
+            .limitations-section {
+                width: 100%;
+            }
+
+            .content-section {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+
+            .limitations-section {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Check AWS Bucket Regions</h2>
-        <p>Enter bucket names below (one per line) and click "Generate Command":</p>
+<header>
+    <h1>AWS S3 Bucket Region Checker</h1>
+</header>
 
+<div class="layout-container">
+    <div class="content-section">
+        <h2 class="section-title">Enter AWS S3 Bucket Names (one per line)</h2>
         <textarea id="bucketList" placeholder="Enter up to 50 bucket names..." oninput="enforceBucketLimit()"></textarea>
         <br>
         <button onclick="generateCommand()">Generate Command</button>
         
         <div id="commandContainer" style="display: none;">
-            <p>Copy and run this command in your terminal:</p>
+            <h2 class="section-title">Generated Command</h2>
             <div class="command-container">
                 <button class="copy-btn" onclick="copyCommand()">Copy</button>
                 <pre id="output"></pre>
             </div>
         </div>
-        <div class="disclaimer-block">
-            <p class="disclaimer">
-                ⚠️ <strong>Disclaimer:</strong> This tool is intended for use on AWS S3 buckets that <strong>you own or have explicit permission to query.</strong> Unauthorized use of this tool may violate AWS policies.
-            </p>
-        </div>
     </div>
+</div>
+
+<div class="limitations-section">
+    <p>⚠️ <strong>Disclaimer:</strong> This tool is intended for use on AWS S3 buckets that <strong>you own or have explicit permission to query.</strong> Unauthorized use may violate AWS policies.</p>
+</div>
+
+    
+    <footer class="footer">
+        <p>Developed by <a href="https://github.com/rgerjeki" target="_blank">rgerjeki</a></p>
+      </footer>
 
     <script>
         function enforceBucketLimit() {
