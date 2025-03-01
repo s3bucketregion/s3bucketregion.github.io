@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucket Region Checker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .command-container {
+            position: relative;
+            background: #222;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Courier New", monospace;
+            text-align: left;
+            max-width: 100%;
+            margin-top: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .copy-btn {
+            background-color: #28a745;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-bottom: 5px;
+        }
+
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Check AWS Bucket Regions</h2>
+        <p>Enter bucket names below (one per line) and click "Generate Command":</p>
+
+        <textarea id="bucketList" placeholder="Enter bucket names here..."></textarea>
+        <br>
+        <button onclick="generateCommand()">Generate Command</button>
+        
+        <div id="commandContainer" style="display: none;">
+            <p>Copy and run this command in your terminal:</p>
+            <div class="command-container">
+                <button class="copy-btn" onclick="copyCommand()">Copy</button>
+                <pre id="output"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateCommand() {
+            let output = document.getElementById("output");
+            let commandContainer = document.getElementById("commandContainer");
+            
+            output.textContent = "";
+            commandContainer.style.display = "none";
+
+            let buckets = document.getElementById("bucketList").value.trim().split("\n").map(b => b.trim()).filter(b => b);
+
+            if (buckets.length === 0) {
+                output.textContent = "Please enter at least one bucket.";
+                commandContainer.style.display = "block";
+                return;
+            }
+
+            let command = `clear && echo "Checking AWS S3 Bucket Regions..." &&\n` + 
+                buckets.map(bucket => 
+                    `echo -n "Bucket: ${bucket} -> " && curl -sI https://${bucket}.s3.amazonaws.com | grep x-amz-bucket-region || echo "x-amz-bucket-region: Unknown"`
+                ).join(" && \n");
+
+            output.textContent = command;
+            commandContainer.style.display = "block";
+        }
+
+        function copyCommand() {
+            let commandText = document.getElementById("output").textContent;
+            navigator.clipboard.writeText(commandText).then(() => {
+                let copyBtn = document.querySelector(".copy-btn");
+                copyBtn.textContent = "Copied! ✅";
+                setTimeout(() => {
+                    copyBtn.textContent = "Copy";
+                }, 2000);
+            }).catch(err => {
+                alert("Failed to copy command.");
+            });
+        }
+    </script>
+
+</body>
+</html>
